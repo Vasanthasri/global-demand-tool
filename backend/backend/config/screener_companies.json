@@ -1,0 +1,486 @@
+{
+  "_description": "Maps domain + sub-domain to Screener.in company tickers based on query intent. Companies listed are Indian-listed firms whose business directly reflects demand for the queried topic.",
+  "_instructions": "Each entry has 'default' (used when no keyword matches) and 'keyword_overrides' (specific keyword -> targeted company list). Tickers must be valid Screener.in slugs. Companies must be RELEVANT to the query intent — e.g. SAP queries use IT implementers, EV queries use auto OEMs.",
+
+  "Technology": {
+    "SAP & Enterprise Software": {
+      "default": ["TCS", "INFY", "WIPRO", "HCLTECH", "LTIMindtree"],
+      "keyword_overrides": {
+        "s/4hana":        ["TCS", "INFY", "WIPRO"],
+        "s4hana":         ["TCS", "INFY", "WIPRO"],
+        "sap btp":        ["TCS", "INFY", "LTIMindtree"],
+        "sap fiori":      ["TCS", "INFY"],
+        "sap basis":      ["TCS", "INFY", "WIPRO"],
+        "sap abap":       ["TCS", "INFY", "WIPRO"],
+        "sap hana":       ["TCS", "INFY", "WIPRO"],
+        "sap erp":        ["TCS", "INFY", "WIPRO", "HCLTECH"],
+        "sap cloud":      ["TCS", "INFY", "WIPRO"],
+        "sap migration":  ["TCS", "INFY", "WIPRO", "HCLTECH"],
+        "sap consultant": ["TCS", "INFY", "WIPRO"],
+        "sap mm":         ["TCS", "INFY", "LTIMindtree"],
+        "sap fi":         ["TCS", "INFY"],
+        "sap fico":       ["TCS", "INFY"],
+        "sap sd":         ["TCS", "INFY"],
+        "sap ewm":        ["TCS", "INFY", "LTIMindtree"],
+        "sap pp":         ["TCS", "LTIMindtree"],
+        "sap pm":         ["TCS", "LTIMindtree"],
+        "sap tm":         ["TCS", "INFY"],
+        "sap grc":        ["TCS", "INFY", "WIPRO"],
+        "sap ariba":      ["TCS", "INFY"],
+        "sap bw":         ["TCS", "INFY", "LTIMindtree"],
+        "sap analytics":  ["TCS", "INFY", "LTIMindtree"],
+        "successfactors": ["TCS", "INFY"],
+        "rise with sap":  ["TCS", "INFY", "WIPRO"]
+      }
+    },
+
+    "Artificial Intelligence": {
+      "default": ["TCS", "INFY", "PERSISTENT", "LTTS", "MASTEK"],
+      "keyword_overrides": {
+        "llm":              ["TCS", "INFY", "PERSISTENT"],
+        "generative ai":    ["TCS", "INFY", "WIPRO"],
+        "chatgpt":          ["TCS", "INFY", "PERSISTENT"],
+        "ai agents":        ["TCS", "INFY", "PERSISTENT"],
+        "computer vision":  ["TCS", "LTTS", "INFY"],
+        "nlp":              ["TCS", "INFY", "PERSISTENT"],
+        "machine learning": ["TCS", "INFY", "WIPRO", "PERSISTENT"],
+        "deep learning":    ["TCS", "INFY", "PERSISTENT"],
+        "data science":     ["TCS", "INFY", "WIPRO"],
+        "python":           ["TCS", "INFY", "PERSISTENT", "MPHASIS"],
+        "ai developer":     ["TCS", "INFY", "PERSISTENT"]
+      }
+    },
+
+    "Cloud Computing": {
+      "default": ["TCS", "INFY", "WIPRO", "HCLTECH"],
+      "keyword_overrides": {
+        "aws":        ["TCS", "INFY", "WIPRO"],
+        "azure":      ["TCS", "INFY", "HCLTECH"],
+        "gcp":        ["TCS", "INFY", "WIPRO"],
+        "devops":     ["TCS", "INFY", "PERSISTENT"],
+        "kubernetes": ["TCS", "INFY", "PERSISTENT"],
+        "serverless": ["TCS", "INFY"],
+        "cloud migration": ["TCS", "INFY", "WIPRO", "HCLTECH"]
+      }
+    },
+
+    "Cybersecurity": {
+      "default": ["TCS", "INFY", "WIPRO", "LTTS"],
+      "keyword_overrides": {
+        "zero trust":  ["TCS", "INFY"],
+        "soc":         ["TCS", "WIPRO"],
+        "siem":        ["TCS", "INFY", "WIPRO"],
+        "pentest":     ["TCS", "INFY"],
+        "grc":         ["TCS", "INFY", "WIPRO"],
+        "cloud security": ["TCS", "INFY", "WIPRO"]
+      }
+    },
+
+    "Web Development": {
+      "default": ["TCS", "INFY", "PERSISTENT", "MASTEK"],
+      "keyword_overrides": {
+        "react":       ["PERSISTENT", "MASTEK", "INFY"],
+        "angular":     ["TCS", "PERSISTENT"],
+        "nodejs":      ["PERSISTENT", "MASTEK"],
+        "fullstack":   ["TCS", "PERSISTENT", "MASTEK"],
+        "frontend":    ["PERSISTENT", "MASTEK"],
+        "backend":     ["TCS", "INFY", "PERSISTENT"]
+      }
+    },
+
+    "Blockchain & Web3": {
+      "default": ["TCS", "INFY", "WIPRO"],
+      "keyword_overrides": {
+        "blockchain": ["TCS", "INFY"],
+        "crypto":     ["TCS", "INFY"],
+        "defi":       ["TCS", "INFY"],
+        "nft":        ["TCS", "INFY"]
+      }
+    }
+  },
+
+  "Health & Life Sciences": {
+    "Pharmaceuticals": {
+      "default": ["SUNPHARMA", "DRREDDY", "CIPLA", "DIVISLAB", "AUROPHARMA"],
+      "keyword_overrides": {
+        "oncology":    ["SUNPHARMA", "DRREDDY", "NATCOPHARM"],
+        "cancer":      ["SUNPHARMA", "DRREDDY", "NATCOPHARM"],
+        "vaccine":     ["BIOCON", "AUROPHARMA", "DRREDDY"],
+        "generics":    ["CIPLA", "AUROPHARMA", "DRREDDY"],
+        "biosimilar":  ["BIOCON", "DRREDDY"],
+        "api":         ["DIVI", "SOLARA", "AUROPHARMA"],
+        "cro":         ["SUVEN", "DRREDDY"],
+        "clinical trial": ["SUNPHARMA", "DRREDDY", "CIPLA"]
+      }
+    },
+
+    "Digital Health & Telemedicine": {
+      "default": ["APOLLOHOSP", "FORTIS", "MAXHEALTH"],
+      "keyword_overrides": {
+        "telemedicine": ["APOLLOHOSP", "FORTIS"],
+        "health app":   ["APOLLOHOSP"],
+        "wearable":     ["APOLLOHOSP", "FORTIS"],
+        "digital health": ["APOLLOHOSP", "FORTIS", "MAXHEALTH"]
+      }
+    },
+
+    "Mental Health": {
+      "default": ["APOLLOHOSP", "MAXHEALTH", "FORTIS"],
+      "keyword_overrides": {
+        "therapy":    ["APOLLOHOSP", "MAXHEALTH"],
+        "depression": ["SUNPHARMA", "TORNTPHARM"],
+        "anxiety":    ["SUNPHARMA", "TORNTPHARM"]
+      }
+    },
+
+    "Biotech & Genomics": {
+      "default": ["BIOCON", "DRREDDY", "SUNPHARMA"],
+      "keyword_overrides": {
+        "genomics":   ["BIOCON", "DRREDDY"],
+        "crispr":     ["BIOCON"],
+        "biotech":    ["BIOCON", "DRREDDY", "SUVEN"],
+        "gene therapy": ["BIOCON", "DRREDDY"]
+      }
+    }
+  },
+
+  "Finance & Economy": {
+    "Fintech": {
+      "default": ["PAYTM", "POLICYBZR", "ANGELONE"],
+      "keyword_overrides": {
+        "payment":         ["PAYTM", "FINCABLES"],
+        "upi":             ["PAYTM"],
+        "digital payment": ["PAYTM"],
+        "bnpl":            ["PAYTM", "BAJFINANCE"],
+        "neobank":         ["PAYTM", "ANGELONE"],
+        "insurtech":       ["POLICYBZR", "STARHEALTH"],
+        "wealthtech":      ["ANGELONE", "CDSL", "BSESTARMF"],
+        "lending":         ["BAJFINANCE", "CHOLAFIN"],
+        "credit":          ["BAJFINANCE", "SBICARD"]
+      }
+    },
+
+    "Banking": {
+      "default": ["HDFCBANK", "ICICIBANK", "KOTAKBANK", "SBIN", "AXISBANK"],
+      "keyword_overrides": {
+        "retail banking":    ["HDFCBANK", "ICICIBANK"],
+        "corporate banking": ["HDFCBANK", "SBIN", "ICICIBANK"],
+        "mortgage":          ["HDFC", "LICHSGFIN", "CANFINHOME"],
+        "home loan":         ["HDFC", "LICHSGFIN"],
+        "sme":               ["SBIN", "BANDHANBNK", "DCBBANK"],
+        "microfinance":      ["BANDHANBNK", "UJJIVANSFB"]
+      }
+    },
+
+    "Investment & VC": {
+      "default": ["ANGELONE", "CDSL", "BSE"],
+      "keyword_overrides": {
+        "stock trading": ["ANGELONE", "ZERODHA"],
+        "mutual fund":   ["HDFCAMC", "NIPPONAMC"],
+        "demat":         ["CDSL", "NSDL"]
+      }
+    }
+  },
+
+  "Education": {
+    "EdTech & Online Learning": {
+      "default": ["CAREEREDGE", "NIITLTD", "APTECH"],
+      "keyword_overrides": {
+        "online learning": ["CAREEREDGE", "NIITLTD"],
+        "upskilling":      ["NIITLTD", "CAREEREDGE", "APTECH"],
+        "bootcamp":        ["CAREEREDGE", "NIITLTD"],
+        "certification":   ["NIITLTD", "APTECH"],
+        "lms":             ["CAREEREDGE", "NIITLTD"],
+        "edtech":          ["CAREEREDGE", "NIITLTD"]
+      }
+    },
+
+    "Higher Education": {
+      "default": ["CAREEREDGE", "NIITLTD"],
+      "keyword_overrides": {
+        "university": ["CAREEREDGE"],
+        "college":    ["CAREEREDGE", "NIITLTD"]
+      }
+    }
+  },
+
+  "Retail & Consumer Goods": {
+    "E-Commerce": {
+      "default": ["NYKAA", "ZOMATO", "DMART"],
+      "keyword_overrides": {
+        "marketplace":     ["NYKAA", "ZOMATO"],
+        "d2c":             ["NYKAA", "MAMAEARTH"],
+        "quick commerce":  ["ZOMATO", "DMART"],
+        "fashion":         ["NYKAA", "VEDANT"],
+        "beauty":          ["NYKAA", "MAMAEARTH"],
+        "grocery":         ["DMART", "ZOMATO"]
+      }
+    },
+
+    "FMCG & CPG": {
+      "default": ["HINDUNILVR", "ITC", "NESTLEIND", "DABUR", "MARICO"],
+      "keyword_overrides": {
+        "food":          ["NESTLEIND", "ITC", "BRITANNIA"],
+        "beverage":      ["TATACONSUM", "VARUN"],
+        "personal care": ["HINDUNILVR", "DABUR", "MARICO"],
+        "skincare":      ["HINDUNILVR", "MAMAEARTH"],
+        "haircare":      ["HINDUNILVR", "MARICO", "DABUR"],
+        "household":     ["HINDUNILVR", "GODREJCP"],
+        "baby":          ["HINDUNILVR", "BAJAJCON"]
+      }
+    },
+
+    "Luxury Goods": {
+      "default": ["TRENT", "VEDANT", "TITAN"],
+      "keyword_overrides": {
+        "luxury":   ["TITAN", "TRENT"],
+        "premium":  ["TITAN", "TRENT"],
+        "jewellery":["TITAN", "RAJESHEXPO"]
+      }
+    }
+  },
+
+  "Manufacturing & Industry": {
+    "Industry 4.0": {
+      "default": ["SIEMENS", "ABB", "HONAUT", "LTTS"],
+      "keyword_overrides": {
+        "smart factory":   ["SIEMENS", "ABB", "HONAUT"],
+        "digital twin":    ["SIEMENS", "LTTS"],
+        "robotics":        ["ABB", "GRINDWELL"],
+        "iot":             ["LTTS", "SIEMENS", "HONAUT"],
+        "automation":      ["ABB", "SIEMENS", "HONAUT"],
+        "plc":             ["SIEMENS", "ABB"],
+        "scada":           ["SIEMENS", "ABB", "HONAUT"],
+        "mes":             ["SIEMENS", "LTTS"],
+        "predictive maintenance": ["LTTS", "SIEMENS"]
+      }
+    },
+
+    "Aerospace & Defense": {
+      "default": ["HAL", "BEL", "BEML", "PARAS"],
+      "keyword_overrides": {
+        "aerospace":  ["HAL", "BEL"],
+        "defense":    ["BEL", "HAL", "BEML"],
+        "military":   ["BEL", "HAL"],
+        "drone":      ["HAL", "PARAS"]
+      }
+    }
+  },
+
+  "Transportation & Mobility": {
+    "Electric Vehicles": {
+      "default": ["TATAMOTORS", "MAHINDRA", "BAJAJ-AUTO"],
+      "keyword_overrides": {
+        "ev charging":    ["TATAMOTORS", "CHALET"],
+        "battery":        ["TATAMOTORS", "EXIDEIND", "AMARON"],
+        "electric car":   ["TATAMOTORS", "MAHINDRA"],
+        "electric bike":  ["HEROMOTOCO", "BAJAJ-AUTO", "TVS"],
+        "ev scooter":     ["TVS", "BAJAJ-AUTO"],
+        "charging station":["TATAMOTORS", "TATAPOWER"]
+      }
+    },
+
+    "Logistics & Supply Chain": {
+      "default": ["DELHIVERY", "BLUEDART", "VRL", "ALLCARGO"],
+      "keyword_overrides": {
+        "last mile":   ["DELHIVERY", "XPRESSBEES"],
+        "warehousing": ["ALLCARGO", "DELHIVERY"],
+        "freight":     ["ALLCARGO", "VRL", "TCI"],
+        "shipping":    ["SCI", "ESSAR"],
+        "3pl":         ["ALLCARGO", "DELHIVERY"]
+      }
+    }
+  },
+
+  "Environment & Sustainability": {
+    "Renewable Energy": {
+      "default": ["ADANIGREEN", "TATAPOWER", "SUZLON", "TORNTPOWER"],
+      "keyword_overrides": {
+        "solar":          ["ADANIGREEN", "TATAPOWER", "WEBSOL"],
+        "wind":           ["SUZLON", "INOXWIND"],
+        "green hydrogen": ["ADANIGREEN", "RELIANCE", "NTPC"],
+        "energy storage": ["EXIDEIND", "AMARON"],
+        "rooftop solar":  ["WEBSOL", "TATAPOWER"]
+      }
+    },
+
+    "ESG & Climate Tech": {
+      "default": ["TATAPOWER", "ADANIGREEN", "NTPC"],
+      "keyword_overrides": {
+        "carbon":    ["TATAPOWER", "ADANIGREEN"],
+        "esg":       ["TATAPOWER", "TCS", "INFY"],
+        "net zero":  ["TATAPOWER", "ADANIGREEN", "NTPC"],
+        "climate":   ["TATAPOWER", "NTPC"]
+      }
+    }
+  },
+
+  "Agriculture & Food Tech": {
+    "AgTech": {
+      "default": ["PI", "RALLIS", "DHANUKA"],
+      "keyword_overrides": {
+        "precision farming": ["PI", "RALLIS"],
+        "agtech":           ["PI", "RALLIS", "DHANUKA"],
+        "crop":             ["PI", "RALLIS", "DHANUKA"],
+        "fertilizer":       ["COROMANDEL", "CHAMBAL", "DEEPAKNTR"]
+      }
+    },
+
+    "Alternative Proteins": {
+      "default": ["NESTLEIND", "ITC", "TATACONSUM"],
+      "keyword_overrides": {
+        "plant based":  ["NESTLEIND", "ITC"],
+        "vegan":        ["NESTLEIND", "ITC"],
+        "lab grown":    ["NESTLEIND", "ITC"]
+      }
+    }
+  },
+
+  "Marketing & Advertising": {
+    "Digital Marketing": {
+      "default": ["INFY", "TCS", "PERSISTENT"],
+      "keyword_overrides": {
+        "seo":                 ["INFY", "PERSISTENT"],
+        "google ads":          ["INFY", "TCS"],
+        "content marketing":   ["INFY", "PERSISTENT"],
+        "social media":        ["INFY", "TCS"],
+        "marketing automation":["INFY", "TCS", "PERSISTENT"]
+      }
+    },
+
+    "Advertising Market": {
+      "default": ["HATHWAY", "SUNTV", "NETWORK18"],
+      "keyword_overrides": {
+        "advertising": ["SUNTV", "NETWORK18", "HATHWAY"],
+        "ad spend":    ["SUNTV", "NETWORK18"]
+      }
+    }
+  },
+
+  "Real Estate & Construction": {
+    "Proptech": {
+      "default": ["DLF", "GODREJPROP", "PRESTIGE"],
+      "keyword_overrides": {
+        "proptech":       ["DLF", "GODREJPROP"],
+        "real estate":    ["DLF", "GODREJPROP", "PRESTIGE"],
+        "smart building": ["DLF", "GODREJPROP"],
+        "coworking":      ["DLF", "GODREJPROP"]
+      }
+    },
+
+    "Construction": {
+      "default": ["LT", "NCC", "KNR"],
+      "keyword_overrides": {
+        "construction":   ["LT", "NCC"],
+        "infrastructure": ["LT", "NCC", "KNR"],
+        "road":           ["KNR", "ASHOKA", "IRB"],
+        "cement":         ["ULTRACEMCO", "SHREECEM", "ACC"]
+      }
+    }
+  },
+
+  "Media & Entertainment": {
+    "Gaming": {
+      "default": ["NAZARA", "DELTATECH"],
+      "keyword_overrides": {
+        "mobile gaming": ["NAZARA"],
+        "esports":       ["NAZARA", "DELTATECH"],
+        "game dev":      ["NAZARA"]
+      }
+    },
+
+    "Streaming & OTT": {
+      "default": ["ZEEL", "SUNTV", "NETWORK18"],
+      "keyword_overrides": {
+        "ott":     ["ZEEL", "NETWORK18"],
+        "netflix": ["ZEEL", "NETWORK18"],
+        "music":   ["SAREGAMA", "TIPS"]
+      }
+    },
+
+    "Music": {
+      "default": ["SAREGAMA", "TIPS"],
+      "keyword_overrides": {
+        "music streaming": ["SAREGAMA", "TIPS"],
+        "spotify":         ["SAREGAMA"]
+      }
+    }
+  },
+
+  "Social & Human Services": {
+    "HR & Workforce": {
+      "default": ["TEAMLEASE", "QUESS", "MAFATLAL"],
+      "keyword_overrides": {
+        "recruitment": ["TEAMLEASE", "QUESS"],
+        "staffing":    ["TEAMLEASE", "QUESS"],
+        "hr tech":     ["TEAMLEASE", "QUESS"],
+        "payroll":     ["TEAMLEASE"]
+      }
+    },
+
+    "Social Impact": {
+      "default": ["TCS", "INFY", "WIPRO"],
+      "keyword_overrides": {}
+    }
+  },
+
+  "Government & Public Services": {
+    "Civic Tech": {
+      "default": ["TCS", "INFY", "WIPRO"],
+      "keyword_overrides": {
+        "e-government": ["TCS", "INFY"],
+        "smart city":   ["TCS", "SIEMENS"],
+        "open data":    ["TCS", "INFY"]
+      }
+    },
+
+    "Defense": {
+      "default": ["BEL", "HAL", "BEML"],
+      "keyword_overrides": {
+        "defense":  ["BEL", "HAL"],
+        "military": ["BEL", "HAL", "BEML"]
+      }
+    }
+  },
+
+  "Tourism & Hospitality": {
+    "Travel Tech": {
+      "default": ["INDIAMART", "IRCTC", "EASEMYTRIP"],
+      "keyword_overrides": {
+        "travel":    ["IRCTC", "EASEMYTRIP"],
+        "booking":   ["EASEMYTRIP", "IRCTC"],
+        "airline":   ["INTERGLOBE", "SPICEJET"],
+        "hotel":     ["LEMONTREE", "CHALET"]
+      }
+    },
+
+    "Food Service": {
+      "default": ["ZOMATO", "JUBLFOOD", "DEVYANI"],
+      "keyword_overrides": {
+        "restaurant":  ["JUBLFOOD", "DEVYANI", "SAPPHIRE"],
+        "fast food":   ["JUBLFOOD", "DEVYANI"],
+        "food delivery":["ZOMATO"]
+      }
+    }
+  },
+
+  "Science & Research": {
+    "Life Sciences Research": {
+      "default": ["BIOCON", "DRREDDY", "SUNPHARMA"],
+      "keyword_overrides": {
+        "biology":    ["BIOCON", "DRREDDY"],
+        "neuroscience":["SUNPHARMA"],
+        "genomics":   ["BIOCON", "DRREDDY"]
+      }
+    },
+
+    "Physical Sciences": {
+      "default": ["TCS", "LTTS", "DRREDDY"],
+      "keyword_overrides": {
+        "quantum":      ["TCS", "INFY"],
+        "materials":    ["LTTS"],
+        "nanotechnology":["TCS", "LTTS"]
+      }
+    }
+  }
+}

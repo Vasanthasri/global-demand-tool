@@ -1,0 +1,182 @@
+{
+  "_description": "Defines the sub-module breakdown for each domain and sub-domain. Used by server.py to analyse scraped content and show which specific areas within a domain have demand. Fully dynamic — no hardcoding in Python.",
+  "_instructions": "To add a new domain/sub-domain: add its key matching domain_map.py. Each module entry needs 'name', 'emoji', and 'keywords'. Keywords are matched against scraped titles and content (case-insensitive). Add as many modules as needed.",
+
+  "Technology": {
+    "SAP & Enterprise Software": [
+      {"name": "S/4HANA Migration",       "emoji": "🔄", "keywords": ["s/4hana", "s4hana", "migration", "ecc", "rise", "upgrade", "on-premise to cloud", "ecc migration", "s4 migration", "greenfield", "brownfield", "conversion"]},
+      {"name": "SAP Cloud / RISE",         "emoji": "☁️", "keywords": ["rise with sap", "sap cloud", "cloud erp", "rise", "hyperscaler", "public cloud", "private cloud edition", "saas erp", "cloud migration sap"]},
+      {"name": "SAP BTP",                  "emoji": "🛠️", "keywords": ["btp", "business technology platform", "extension suite", "integration suite", "low-code", "no-code", "cap", "capm", "sap build", "btp cockpit", "btp services"]},
+      {"name": "SAP ABAP / RAP",           "emoji": "💻", "keywords": ["abap", "rap", "restful abap", "abap cloud", "abap developer", "abap objects", "odata", "bapi", "function module", "abap programming", "abap workbench"]},
+      {"name": "SAP Fiori / UI5",          "emoji": "🎨", "keywords": ["fiori", "ui5", "sapui5", "fiori elements", "launchpad", "user interface", "frontend sap", "sap ux", "fiori app", "fiori design"]},
+      {"name": "SAP EWM / WM",             "emoji": "📦", "keywords": ["ewm", "extended warehouse", "warehouse management", "wm", "warehouse", "stock management", "logistics execution", "storage location", "goods receipt", "goods issue", "transfer order", "warehouse order"]},
+      {"name": "SAP TM / Transportation",  "emoji": "🚚", "keywords": ["sap tm", "transportation management", "freight order", "freight unit", "carrier", "shipment", "route planning", "load planning", "transportation planning"]},
+      {"name": "SAP PM / Plant Maintenance","emoji": "🔧", "keywords": ["pm module", "plant maintenance", "maintenance order", "equipment master", "functional location", "preventive maintenance", "breakdown maintenance", "work order sap", "asset management sap"]},
+      {"name": "SAP PP / Production",      "emoji": "🏭", "keywords": ["pp module", "production planning", "work center", "routing", "bom", "bill of materials", "production order", "capacity planning", "shop floor", "mrp run"]},
+      {"name": "SAP QM / Quality",         "emoji": "✅", "keywords": ["qm module", "quality management", "inspection lot", "quality notification", "control chart", "quality plan", "inspection type", "usage decision", "defect recording"]},
+      {"name": "SAP PS / Project System",  "emoji": "📋", "keywords": ["ps module", "project system", "wbs element", "network activity", "project planning sap", "milestone", "project cost", "project billing", "cj20n"]},
+      {"name": "SAP BASIS / Admin",        "emoji": "⚙️", "keywords": ["basis", "system admin", "sap admin", "transport", "landscape", "netweaver", "system copy", "support package", "basis consultant", "stms", "solman", "solution manager"]},
+      {"name": "SAP MM / Procurement",     "emoji": "🛒", "keywords": ["mm", "materials management", "procurement", "purchase order", "vendor", "inventory", "mrp", "sourcing", "material master", "purchase requisition", "info record"]},
+      {"name": "SAP SD / Sales",           "emoji": "💼", "keywords": ["sd", "sales distribution", "order management", "billing", "sales order", "crm sap", "customer", "pricing condition", "delivery", "invoice", "vbak"]},
+      {"name": "SAP FI / Finance",         "emoji": "💰", "keywords": ["fi", "financial accounting", "fico", "controlling", "accounts payable", "accounts receivable", "gl", "asset accounting", "general ledger", "profit center", "cost center", "fb50", "f-02"]},
+      {"name": "SAP CO / Controlling",     "emoji": "📊", "keywords": ["co module", "controlling", "cost center", "profit center", "internal order", "product costing", "copa", "activity type", "overhead", "settlement", "co-pa"]},
+      {"name": "SAP HCM / SuccessFactors", "emoji": "👥", "keywords": ["hcm", "hr module", "payroll", "successfactors", "human capital", "time management", "personnel", "employee central", "sf ec", "sfsf", "pa module", "om module"]},
+      {"name": "SAP Analytics / BW",       "emoji": "📈", "keywords": ["bw", "business warehouse", "analytics cloud", "sac", "reporting", "datasphere", "bw4hana", "bi sap", "embedded analytics", "bex query", "webi", "crystal reports"]},
+      {"name": "SAP Ariba / SRM",          "emoji": "🤝", "keywords": ["ariba", "srm", "supplier relationship", "sourcing ariba", "contract management", "supplier management", "spend analysis", "procurement portal", "catalog management"]},
+      {"name": "SAP CX / C4C",             "emoji": "🎯", "keywords": ["sap cx", "c4c", "customer experience", "sales cloud", "service cloud", "marketing cloud", "commerce cloud", "sap crm", "hybris", "c/4hana"]},
+      {"name": "SAP IBP / APO",            "emoji": "📅", "keywords": ["ibp", "integrated business planning", "apo", "demand planning", "supply planning", "s&op", "sales operations planning", "supply chain planning sap"]},
+      {"name": "SAP Security / GRC",       "emoji": "🔒", "keywords": ["grc", "governance risk compliance", "sap security", "role design", "segregation of duties", "sod", "access control", "audit sap", "authorization object"]}
+    ],
+
+    "Artificial Intelligence": [
+      {"name": "Large Language Models", "emoji": "🧠", "keywords": ["llm", "gpt", "claude", "gemini", "language model", "chatgpt", "generative ai", "foundation model", "transformer"]},
+      {"name": "ML / Deep Learning",   "emoji": "🤖", "keywords": ["machine learning", "deep learning", "neural network", "training", "model", "pytorch", "tensorflow", "ml model", "inference"]},
+      {"name": "AI in Healthcare",     "emoji": "🏥", "keywords": ["medical ai", "clinical ai", "diagnosis ai", "healthcare ai", "radiology", "drug discovery ai", "clinical decision"]},
+      {"name": "AI Agents / Automation","emoji": "⚡","keywords": ["ai agent", "automation", "agentic", "workflow ai", "rpa", "copilot", "autonomous", "multi-agent"]},
+      {"name": "Computer Vision",      "emoji": "👁️", "keywords": ["computer vision", "image recognition", "object detection", "cv model", "yolo", "image classification", "visual ai"]},
+      {"name": "NLP / Text Analytics", "emoji": "📝", "keywords": ["nlp", "natural language", "text analytics", "sentiment", "named entity", "text classification", "information extraction"]}
+    ],
+
+    "Cloud Computing": [
+      {"name": "AWS",             "emoji": "🟠", "keywords": ["aws", "amazon web services", "ec2", "s3", "lambda", "eks", "fargate", "cloudformation"]},
+      {"name": "Azure",           "emoji": "🔵", "keywords": ["azure", "microsoft cloud", "azure devops", "aks", "azure functions", "azure ad", "microsoft 365"]},
+      {"name": "GCP",             "emoji": "🟡", "keywords": ["gcp", "google cloud", "bigquery", "gke", "vertex ai", "cloud run", "cloud sql"]},
+      {"name": "Kubernetes",      "emoji": "☸️", "keywords": ["kubernetes", "k8s", "container", "docker", "helm", "microservices", "orchestration", "pod"]},
+      {"name": "Serverless",      "emoji": "⚡", "keywords": ["serverless", "lambda", "functions", "faas", "event-driven", "function as a service"]},
+      {"name": "DevOps / SRE",    "emoji": "🔧", "keywords": ["devops", "sre", "ci/cd", "pipeline", "monitoring", "observability", "terraform", "ansible", "gitops"]}
+    ],
+
+    "Cybersecurity": [
+      {"name": "Zero Trust",       "emoji": "🔒", "keywords": ["zero trust", "ztna", "identity", "access management", "iam", "least privilege"]},
+      {"name": "SOC / SIEM",       "emoji": "🛡️", "keywords": ["soc", "siem", "security operations", "incident response", "threat detection", "log management"]},
+      {"name": "Cloud Security",   "emoji": "☁️", "keywords": ["cloud security", "cspm", "cwpp", "container security", "kubernetes security"]},
+      {"name": "Endpoint Security","emoji": "💻", "keywords": ["endpoint", "edr", "xdr", "antivirus", "malware", "ransomware protection"]},
+      {"name": "Penetration Testing","emoji": "🔍","keywords": ["penetration testing", "pentest", "red team", "vulnerability assessment", "ethical hacking"]}
+    ],
+
+    "Web Development": [
+      {"name": "Frontend / React", "emoji": "⚛️", "keywords": ["react", "frontend", "javascript", "typescript", "vue", "angular", "next.js", "svelte"]},
+      {"name": "Backend / APIs",   "emoji": "🔌", "keywords": ["backend", "api", "rest", "graphql", "microservices", "node", "python backend", "django", "fastapi"]},
+      {"name": "Full Stack",       "emoji": "📚", "keywords": ["full stack", "fullstack", "mern", "mean", "lamp", "full-stack developer"]},
+      {"name": "DevOps / Cloud",   "emoji": "🚀", "keywords": ["deployment", "hosting", "devops", "ci/cd", "docker", "kubernetes", "aws deploy"]}
+    ]
+  },
+
+  "Health & Life Sciences": {
+    "Pharmaceuticals": [
+      {"name": "Drug Discovery",    "emoji": "💊", "keywords": ["drug discovery", "candidate", "molecule", "target", "preclinical", "lead compound"]},
+      {"name": "Clinical Trials",   "emoji": "🧪", "keywords": ["clinical trial", "phase", "patient", "endpoint", "protocol", "fda approval", "phase 3"]},
+      {"name": "Generics / Biosimilars","emoji": "📋","keywords": ["generic", "biosimilar", "patent expiry", "off-patent", "abbreviated", "anda"]},
+      {"name": "Vaccines",          "emoji": "💉", "keywords": ["vaccine", "immunization", "mrna", "adjuvant", "booster", "immunogenicity", "vaccination"]},
+      {"name": "Oncology",          "emoji": "🎗️", "keywords": ["oncology", "cancer", "tumor", "chemotherapy", "immunotherapy", "targeted therapy"]}
+    ],
+    "Digital Health & Telemedicine": [
+      {"name": "Telemedicine",      "emoji": "📱", "keywords": ["telemedicine", "virtual visit", "teleconsult", "remote care", "video consult", "online doctor"]},
+      {"name": "Wearables",         "emoji": "⌚", "keywords": ["wearable", "smartwatch", "fitness tracker", "biosensor", "continuous monitoring", "health monitor"]},
+      {"name": "Health Apps",       "emoji": "📲", "keywords": ["health app", "patient app", "mhealth", "digital therapeutics", "wellness app", "chronic care"]}
+    ],
+    "Mental Health": [
+      {"name": "Therapy Platforms", "emoji": "🧘", "keywords": ["therapy", "therapist", "counseling", "mental health platform", "online therapy", "betterhelp"]},
+      {"name": "Medication",        "emoji": "💊", "keywords": ["antidepressant", "anxiety medication", "psychiatric", "ssri", "prescription mental"]},
+      {"name": "Wellness Apps",     "emoji": "🌟", "keywords": ["meditation", "mindfulness", "wellness", "stress", "sleep app", "mood tracking"]}
+    ]
+  },
+
+  "Finance & Economy": {
+    "Fintech": [
+      {"name": "Digital Payments",  "emoji": "💳", "keywords": ["payment", "upi", "wallet", "transaction", "pos", "payment gateway", "digital payment"]},
+      {"name": "BNPL",              "emoji": "🛍️", "keywords": ["bnpl", "buy now pay later", "installment", "credit line", "pay later", "deferred payment"]},
+      {"name": "Neobanking",        "emoji": "🏦", "keywords": ["neobank", "digital bank", "challenger bank", "account", "deposit", "neobanking"]},
+      {"name": "Insurtech",         "emoji": "🛡️", "keywords": ["insurtech", "insurance tech", "claim", "underwriting", "embedded insurance", "digital insurance"]},
+      {"name": "Wealthtech",        "emoji": "📈", "keywords": ["wealthtech", "robo advisor", "investment app", "stock trading", "portfolio management"]}
+    ],
+    "Banking": [
+      {"name": "Retail Banking",    "emoji": "🏧", "keywords": ["retail banking", "consumer banking", "savings account", "personal loan", "credit card"]},
+      {"name": "Corporate Banking", "emoji": "🏢", "keywords": ["corporate banking", "business loan", "trade finance", "treasury", "working capital"]},
+      {"name": "Mortgage / Loans",  "emoji": "🏠", "keywords": ["mortgage", "home loan", "personal loan", "lending", "credit", "loan origination"]}
+    ]
+  },
+
+  "Retail & Consumer Goods": {
+    "E-Commerce": [
+      {"name": "Marketplace",       "emoji": "🛒", "keywords": ["marketplace", "amazon", "flipkart", "seller", "listing", "fulfillment", "fba"]},
+      {"name": "D2C / Brand",       "emoji": "🎯", "keywords": ["d2c", "direct to consumer", "brand", "shopify", "own website", "brand store"]},
+      {"name": "Quick Commerce",    "emoji": "⚡", "keywords": ["quick commerce", "10 minute delivery", "q-commerce", "dark store", "instant delivery"]},
+      {"name": "Social Commerce",   "emoji": "📱", "keywords": ["social commerce", "instagram shopping", "live commerce", "tiktok shop", "influencer commerce"]}
+    ],
+    "FMCG & CPG": [
+      {"name": "Food & Beverage",   "emoji": "🍎", "keywords": ["food", "beverage", "fmcg", "cpg", "snack", "drink", "packaged food"]},
+      {"name": "Personal Care",     "emoji": "🧴", "keywords": ["personal care", "skincare", "haircare", "beauty", "hygiene", "grooming"]},
+      {"name": "Household Products","emoji": "🏠", "keywords": ["household", "cleaning", "detergent", "home care", "fabric care"]}
+    ]
+  },
+
+  "Manufacturing & Industry": {
+    "Industry 4.0": [
+      {"name": "Smart Factory",     "emoji": "🏭", "keywords": ["smart factory", "iot manufacturing", "connected machine", "oee", "mes system", "factory automation"]},
+      {"name": "Digital Twin",      "emoji": "🔮", "keywords": ["digital twin", "simulation", "virtual model", "asset twin", "predictive maintenance"]},
+      {"name": "Robotics / Automation","emoji": "🦾","keywords": ["robotics", "cobot", "robot arm", "automation", "pick and place", "assembly robot"]},
+      {"name": "Predictive Maintenance","emoji": "🔍","keywords": ["predictive maintenance", "condition monitoring", "asset health", "failure prediction", "cbm"]}
+    ]
+  },
+
+  "Transportation & Mobility": {
+    "Electric Vehicles": [
+      {"name": "EV Manufacturing",  "emoji": "🚗", "keywords": ["ev manufacturing", "electric car", "bev", "vehicle production", "ev factory", "ev assembly"]},
+      {"name": "Charging Infrastructure","emoji": "⚡","keywords": ["charging station", "ev charging", "charging network", "fast charger", "charging infrastructure"]},
+      {"name": "Battery Technology","emoji": "🔋", "keywords": ["battery", "cell", "lifepo4", "nmc", "solid state battery", "battery pack", "energy density"]}
+    ],
+    "Logistics & Supply Chain": [
+      {"name": "Last Mile Delivery","emoji": "📦", "keywords": ["last mile", "delivery", "courier", "parcel", "home delivery", "doorstep"]},
+      {"name": "Freight / Shipping","emoji": "🚢", "keywords": ["freight", "shipping", "cargo", "container", "ocean freight", "air freight"]},
+      {"name": "Warehousing",       "emoji": "🏭", "keywords": ["warehouse", "fulfillment center", "3pl", "storage", "inventory management"]}
+    ]
+  },
+
+  "Environment & Sustainability": {
+    "Renewable Energy": [
+      {"name": "Solar Energy",      "emoji": "☀️", "keywords": ["solar", "photovoltaic", "pv", "solar panel", "rooftop solar", "utility solar"]},
+      {"name": "Wind Energy",       "emoji": "💨", "keywords": ["wind energy", "wind turbine", "onshore wind", "offshore wind", "wind farm"]},
+      {"name": "Green Hydrogen",    "emoji": "🟢", "keywords": ["green hydrogen", "electrolyzer", "hydrogen fuel", "h2", "hydrogen economy"]},
+      {"name": "Energy Storage",    "emoji": "🔋", "keywords": ["energy storage", "battery storage", "grid storage", "bess", "power storage"]}
+    ],
+    "ESG & Climate Tech": [
+      {"name": "Carbon Credits",    "emoji": "🌿", "keywords": ["carbon credit", "offset", "carbon market", "voluntary carbon", "emissions trading"]},
+      {"name": "ESG Reporting",     "emoji": "📋", "keywords": ["esg reporting", "sustainability report", "disclosure", "scope 1", "scope 2", "net zero"]},
+      {"name": "Climate Analytics", "emoji": "📊", "keywords": ["climate risk", "climate analytics", "physical risk", "transition risk", "tcfd"]}
+    ]
+  },
+
+  "Education": {
+    "EdTech & Online Learning": [
+      {"name": "Online Courses",    "emoji": "🎓", "keywords": ["online course", "mooc", "e-learning", "coursera", "udemy", "self-paced", "video course"]},
+      {"name": "Upskilling / Reskilling","emoji": "📚","keywords": ["upskill", "reskill", "professional development", "career change", "bootcamp", "certification"]},
+      {"name": "K-12 EdTech",       "emoji": "🏫", "keywords": ["k-12", "school", "student", "classroom", "teacher", "homework", "tutoring", "byju"]},
+      {"name": "LMS / Corporate Learning","emoji": "🏢","keywords": ["lms", "learning management", "corporate training", "employee learning", "workforce training"]}
+    ]
+  },
+
+  "Marketing & Advertising": {
+    "Digital Marketing": [
+      {"name": "SEO",               "emoji": "🔍", "keywords": ["seo", "search engine optimization", "keyword ranking", "organic traffic", "backlink", "on-page seo"]},
+      {"name": "Paid Ads / PPC",    "emoji": "💰", "keywords": ["ppc", "paid ads", "google ads", "facebook ads", "display advertising", "cpc", "roas"]},
+      {"name": "Content Marketing", "emoji": "✍️", "keywords": ["content marketing", "blog", "content strategy", "content creation", "editorial", "thought leadership"]},
+      {"name": "Social Media",      "emoji": "📱", "keywords": ["social media", "instagram", "linkedin", "tiktok", "social strategy", "community management"]},
+      {"name": "Marketing Automation","emoji": "⚙️","keywords": ["marketing automation", "hubspot", "marketo", "crm", "email automation", "lead nurturing"]}
+    ]
+  },
+
+  "Media & Entertainment": {
+    "Gaming": [
+      {"name": "Mobile Gaming",     "emoji": "📱", "keywords": ["mobile game", "mobile gaming", "ios game", "android game", "casual game", "hypercasual"]},
+      {"name": "PC / Console",      "emoji": "🎮", "keywords": ["pc gaming", "console", "playstation", "xbox", "steam", "aaa game", "triple a"]},
+      {"name": "Esports",           "emoji": "🏆", "keywords": ["esports", "competitive gaming", "tournament", "esports team", "streaming gaming", "twitch"]},
+      {"name": "Game Development",  "emoji": "🛠️", "keywords": ["game dev", "unity", "unreal engine", "game developer", "game studio", "indie game"]}
+    ],
+    "Streaming & OTT": [
+      {"name": "Video Streaming",   "emoji": "📺", "keywords": ["streaming", "netflix", "disney", "hulu", "prime video", "ott", "video on demand", "svod"]},
+      {"name": "Music Streaming",   "emoji": "🎵", "keywords": ["music streaming", "spotify", "apple music", "audio streaming", "playlist", "podcast"]},
+      {"name": "Live Streaming",    "emoji": "🔴", "keywords": ["live streaming", "live video", "twitch", "youtube live", "webinar", "live event"]}
+    ]
+  }
+}
