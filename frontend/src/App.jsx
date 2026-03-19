@@ -72,7 +72,7 @@ const EXAMPLES = [
 ];
 
 // ── Helpers ─────────────────────────────────────────────────
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const sleep = ms => new Promise(r => setTimeout(r, ms)); // v2
 
 function scoreColor(v) {
   if (v >= 70) return C.green;
