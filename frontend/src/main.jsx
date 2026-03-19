@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createRoot } from "react-dom/client";
 
-const API = "http://localhost:8000";
+const API = "https://global-demand-tool.onrender.com";
 
 const C = {
   bg:      "#07090f",
