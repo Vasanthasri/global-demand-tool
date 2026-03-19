@@ -1233,7 +1233,10 @@ Rules:
 class Handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
-        self.send_response(200); self._cors(); self.end_headers()
+        self.send_response(200)
+        self._cors()
+        self.send_header("Content-Length", "0")
+        self.end_headers()
 
     def do_POST(self):
         length = int(self.headers.get("Content-Length", 0))
@@ -1456,8 +1459,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin",  "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
+        self.send_header("Access-Control-Max-Age",       "86400")
 
     def log_message(self, fmt, *args):
         print(f"[{self.address_string()}] {fmt % args}")
