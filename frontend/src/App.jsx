@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
 const API = "https://global-demand-tool.onrender.com";
-
-
 // ── Design tokens ──────────────────────────────────────────
 const C = {
   bg:          "#07090d",
