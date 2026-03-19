@@ -118,6 +118,30 @@ def build_evidence_summary(query):
     return summary
 
 
+def build_compact_evidence(evidence):
+    """
+    Build a compact evidence summary guaranteed to include ALL signal types.
+    The full evidence JSON can be 20000+ chars. If we truncate it, Pain Signal
+    (which has the most items) fills the limit and all other signals get cut off.
+    Gemini then scores Pain=high and everything else=0.
+    Fix: limit to 5 examples per signal type so all signals fit within token budget.
+    """
+    compact = {
+        "query":             evidence["query"],
+        "total_data_points": evidence["total_data_points"],
+        "signals":           {}
+    }
+    for sig, items in evidence["signals"].items():
+        compact["signals"][sig] = {
+            "count":    len(items),
+            "examples": items[:5]   # max 5 per signal type — enough for scoring
+        }
+    compact["trend_evidence"]    = evidence.get("trend_evidence",    {})
+    compact["financial_evidence"]= evidence.get("financial_evidence", [])[:2]
+    compact["document_evidence"] = evidence.get("document_evidence",  [])[:2]
+    return compact
+
+
 def score_demand_with_ai(query, domain, api_key=None):
     """Use Gemini to analyze all evidence and generate demand score + explanation."""
 
@@ -129,11 +153,16 @@ def score_demand_with_ai(query, domain, api_key=None):
         print(f"[AI] No data found for '{query}' — cannot score")
         return None
 
+    # Build compact evidence — all signal types visible, fits within token limit
+    compact = build_compact_evidence(evidence)
+    print(f"[AI] Evidence: {len(evidence['signals'])} signal types, "
+          f"{evidence['total_data_points']} items → compact={len(json.dumps(compact))} chars")
+
     # Build prompt for Gemini
     prompt = f"""You are a global demand analyst. Analyze the following evidence collected for the query: "{query}"
 
 EVIDENCE COLLECTED:
-{json.dumps(evidence, indent=2)[:6000]}
+{json.dumps(compact, indent=2)}
 
 Based on this evidence, provide a demand analysis in ONLY valid JSON format (no markdown, no explanation outside JSON):
 
@@ -166,7 +195,18 @@ Scoring guide:
 - 60-79: Good demand with some strong signals
 - 40-59: Moderate demand, mixed signals
 - 20-39: Weak demand, limited signals
-- 0-19: No clear demand evidence found"""
+- 0-19: No clear demand evidence found
+
+IMPORTANT RULES FOR SIGNAL SCORING:
+- Each signal has a "count" field showing total items collected — use this for scoring
+- If a signal has count > 0, its score MUST be > 0
+- Pain Signal count > 10 = pain_score at least 60
+- Timing Signal count > 5 = timing_score at least 50
+- Buyer Signal count > 0 = buyer_score at least 30
+- Competitor Signal count > 0 = competitor_score at least 30
+- Validation Signal count > 0 = validation_score at least 40
+- Market Data count > 0 = expansion_score at least 40
+- Never return 0 for a signal that has evidence"""
 
     if not api_key:
         # Fallback: rule-based scoring without AI
@@ -251,15 +291,23 @@ def rule_based_score(query, domain, evidence):
         "Some risk signals detected. Monitor competition and market timing."
     )
 
+    signals = evidence["signals"]
+
     result = {
         "overall_score": overall,
         "signal_scores": {
-            "pain_score": min(100, len(evidence["signals"].get("Pain Signal", [])) * 15),
-            "buyer_score": min(100, len(evidence["signals"].get("Buyer Signal", [])) * 20),
-            "competitor_score": min(100, len(evidence["signals"].get("Competitor Signal", [])) * 15),
-            "timing_score": 60 if has_trends else 20,
-            "validation_score": min(100, len(evidence["signals"].get("Validation Signal", [])) * 25),
-            "expansion_score": 40
+            "pain_score":       min(100, len(signals.get("Pain Signal",       [])) * 12),
+            "buyer_score":      min(100, len(signals.get("Buyer Signal",      [])) * 20),
+            "competitor_score": min(100, len(signals.get("Competitor Signal", [])) * 15),
+            "timing_score":     min(100, max(
+                                    len(signals.get("Timing Signal", [])) * 10,
+                                    60 if has_trends else 0
+                                )),
+            "validation_score": min(100, len(signals.get("Validation Signal", [])) * 20),
+            "expansion_score":  min(100, max(
+                                    len(signals.get("Market Data", [])) * 10,
+                                    40 if has_financials else 20
+                                )),
         },
         "verdict": verdict,
         "why_demand": why_demand,
