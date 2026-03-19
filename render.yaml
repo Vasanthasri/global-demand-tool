@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: global-demand-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python -m playwright install chromium && python -m playwright install-deps chromium
+    startCommand: python backend/server.py
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PORT
+        value: 8000
+    healthCheckPath: /api/health
