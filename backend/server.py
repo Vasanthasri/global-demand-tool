@@ -995,6 +995,241 @@ def _count_signals(rows: list) -> dict:
         counts[sig] = counts.get(sig, 0) + 1
     return counts
 
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# OPEN SUB-AREA DISCOVERY
+# Instead of matching against fixed pre-defined sub-areas,
+# this reads ALL scraped content and asks AI to discover what people 
+# actually talk about — finding demand areas we didn't know to look for.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def discover_sub_areas(query: str, api_key: str = "") -> dict:
+    """
+    Discovers demand sub-areas PURELY from scraped evidence — no predefined lists.
+    
+    Flow:
+    1. Load ALL scraped items for this query from DB
+    2. Extract raw text (titles + content snippets)
+    3. Send to Gemini: "What sub-topics do people actually discuss here?"
+    4. Gemini clusters the content and returns discovered sub-areas with scores
+    5. Returns ranked sub-areas with evidence counts and example sources
+    
+    This finds demand that fixed keyword lists would NEVER catch.
+    """
+    query = resolve_query(query)
+    api_key = api_key or GEMINI_API_KEY
+
+    conn = get_connection()
+    cur  = dict_cursor(conn)
+    p    = placeholder()
+
+    # ── Step 1: Load all scraped items ────────────────────────────────────────
+    cur.execute(
+        f"""SELECT title, content, url, source_name, signal_type, score
+            FROM scraped_items WHERE LOWER(query)=LOWER({p})
+            ORDER BY score DESC""",
+        (query,)
+    )
+    rows = [dict(r) for r in cur.fetchall()]
+    conn.close()
+
+    if not rows:
+        return {
+            "query": query,
+            "discovered_areas": [],
+            "total_items": 0,
+            "method": "no_data",
+            "message": "No scraped data found. Run a search first."
+        }
+
+    # ── Step 2: Build a compact text corpus for AI ────────────────────────────
+    # Group by signal type so AI sees the context
+    by_signal = {}
+    for row in rows:
+        sig   = row.get("signal_type", "General") or "General"
+        title = (row.get("title") or "").strip()
+        snip  = (row.get("content") or "")[:200].strip()
+        src   = (row.get("source_name") or "").strip()
+        if sig not in by_signal:
+            by_signal[sig] = []
+        if title or snip:
+            by_signal[sig].append(f"[{src}] {title}: {snip}")
+
+    corpus_lines = []
+    for sig, items in by_signal.items():
+        corpus_lines.append(f"\n=== {sig} ({len(items)} items) ===")
+        corpus_lines.extend(items[:25])   # max 25 per signal type
+
+    corpus = "\n".join(corpus_lines)[:12000]   # cap at ~12k chars for Gemini
+
+    # ── Step 3: Also do keyword-frequency analysis locally (no AI needed) ─────
+    import re
+    from collections import Counter
+
+    all_text = " ".join(
+        ((r.get("title") or "") + " " + (r.get("content") or ""))
+        for r in rows
+    ).lower()
+
+    # Extract meaningful bigrams and trigrams (topic phrases)
+    words = re.findall(r"\b[a-z][a-z0-9]{2,}\b", all_text)
+    STOPWORDS = {
+        "the","and","for","this","that","with","from","have","been","will",
+        "are","was","were","has","had","but","not","they","their","there",
+        "which","about","what","more","also","some","can","its","all","any",
+        "one","our","into","out","use","how","get","when","than","your",
+        "very","just","each","well","per","may","new","see","used","been",
+        "would","could","should","com","www","http","https","reddit","post",
+        "page","site","link","click","read","view","user","users",
+        "demand","market","need","want","looking","ask","help","know"
+    }
+    keywords_clean = [w for w in words if w not in STOPWORDS and len(w) > 3]
+
+    # Bigrams
+    bigrams = [f"{keywords_clean[i]} {keywords_clean[i+1]}"
+               for i in range(len(keywords_clean)-1)]
+    top_bigrams = Counter(bigrams).most_common(40)
+    top_words   = Counter(keywords_clean).most_common(60)
+
+    freq_summary = "Top topic phrases: " + ", ".join(
+        f"{phrase}({cnt})" for phrase, cnt in top_bigrams[:20]
+    )
+
+    # ── Step 4: Call Gemini to cluster and name the sub-areas ────────────────
+    discovered_areas = []
+    method = "keyword_frequency"   # fallback if Gemini fails
+
+    if api_key:
+        try:
+            import urllib.request as _ur
+            import json as _json
+
+            prompt = f"""You are a demand analyst. I searched for: "{query}"
+
+I scraped {len(rows)} real-world data points from Reddit, news, jobs, reviews, and market reports.
+
+Here is the raw evidence:
+{corpus}
+
+Keyword frequency analysis: {freq_summary}
+
+TASK: Discover what specific sub-topics or sub-areas actually have demand signals in this data.
+Do NOT use any pre-defined list. Only report what you actually see in the evidence above.
+
+For each sub-area you find, assess:
+- How many items mention it (approximately)
+- Signal strength: HIGH / MEDIUM / LOW
+- Signal type: Pain (people struggling with it), Buyer (people paying for it), Growth (market expanding), Niche (small but growing)
+- 1 sentence of evidence from the actual data
+
+Return ONLY this JSON (no markdown, no backticks):
+{{
+  "discovered_areas": [
+    {{
+      "name": "specific sub-area name",
+      "signal_strength": "HIGH|MEDIUM|LOW",
+      "signal_type": "Pain|Buyer|Growth|Niche",
+      "mention_count": 15,
+      "evidence": "one sentence from the actual data proving this",
+      "is_unexpected": true
+    }}
+  ],
+  "summary": "1-2 sentence overview of what the data reveals about this domain"
+}}
+
+Rules:
+- Only include sub-areas actually present in the evidence — no guesses
+- is_unexpected = true if this sub-area would NOT be in a standard predefined list
+- Order by signal_strength (HIGH first)
+- Include 5-12 sub-areas minimum
+- Be specific: not "marketing tools" but "AI-powered email personalization tools"
+"""
+            payload = _json.dumps({
+                "model": "gemini-2.0-flash",
+                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                "generationConfig": {
+                    "temperature": 0.1,
+                    "maxOutputTokens": 2000,
+                    "responseMimeType": "application/json"
+                }
+            }).encode()
+
+            req = _ur.Request(
+                f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}",
+                data=payload,
+                headers={"Content-Type": "application/json"},
+                method="POST"
+            )
+            with _ur.urlopen(req, timeout=30) as resp:
+                raw = _json.loads(resp.read().decode())
+
+            text = raw["candidates"][0]["content"]["parts"][0]["text"]
+            text = text.strip().lstrip("```json").rstrip("```").strip()
+            parsed = _json.loads(text)
+
+            discovered_areas = parsed.get("discovered_areas", [])
+            ai_summary        = parsed.get("summary", "")
+            method = "gemini_discovery"
+
+        except Exception as e:
+            print(f"[Discover] Gemini error: {e} — falling back to keyword clustering")
+            discovered_areas = []
+
+    # ── Step 5: Keyword-frequency fallback if Gemini failed ──────────────────
+    if not discovered_areas:
+        # Cluster bigrams into candidate topics and score them
+        for phrase, cnt in top_bigrams[:15]:
+            if cnt < 2:
+                continue
+            strength = "HIGH" if cnt >= 10 else "MEDIUM" if cnt >= 5 else "LOW"
+            # Find an example source
+            evidence_ex = next(
+                (f"Found in: [{r.get('source_name','')}] {(r.get('title') or '')[:80]}"
+                 for r in rows
+                 if phrase in ((r.get("title","") + " " + r.get("content","")).lower())),
+                f"Mentioned {cnt} times across sources"
+            )
+            discovered_areas.append({
+                "name":           phrase.title(),
+                "signal_strength": strength,
+                "signal_type":    "Pain",
+                "mention_count":  cnt,
+                "evidence":       evidence_ex,
+                "is_unexpected":  True,
+            })
+        ai_summary = f"Keyword-frequency analysis of {len(rows)} scraped items."
+        method = "keyword_frequency"
+
+    # ── Step 6: Attach actual source examples to each area ───────────────────
+    for area in discovered_areas:
+        area_name  = area["name"].lower()
+        kw_tokens  = re.findall(r"\b[a-z]{3,}\b", area_name)
+        area_sources = []
+        seen_urls    = set()
+
+        for row in rows:
+            text = ((row.get("title") or "") + " " + (row.get("content") or "")).lower()
+            if any(tok in text for tok in kw_tokens):
+                url = (row.get("url") or "").strip()
+                if url and url not in seen_urls and len(area_sources) < 3:
+                    seen_urls.add(url)
+                    area_sources.append({
+                        "url":         url,
+                        "source_name": row.get("source_name", ""),
+                        "title":       (row.get("title") or "")[:80],
+                        "signal_type": row.get("signal_type", ""),
+                    })
+        area["sources"] = area_sources
+
+    return {
+        "query":            query,
+        "discovered_areas": discovered_areas,
+        "total_items":      len(rows),
+        "method":           method,
+        "summary":          ai_summary if api_key else f"Analysed {len(rows)} items using keyword frequency.",
+        "note":             "These sub-areas were discovered from real data — not from a predefined list."
+    }
+
 class Handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
@@ -1092,6 +1327,12 @@ class Handler(BaseHTTPRequestHandler):
             result = answer_chat(query, question, api_key or GEMINI_API_KEY)
             self._respond(200, result)
 
+        elif path.startswith("/api/discover/"):
+            raw   = path.replace("/api/discover/", "")
+            query = urllib.parse.unquote(raw.split("?")[0]).strip().lower()
+            result = discover_sub_areas(query, GEMINI_API_KEY)
+            self._respond(200, result)
+
         else:
             self._respond(404, {"error": "not found"})
 
@@ -1161,6 +1402,45 @@ class Handler(BaseHTTPRequestHandler):
             dom   = qs.get("domain", [""])[0]
             sub   = qs.get("sub",    [""])[0]
             self._respond(200, get_module_split(query, dom, sub))
+
+        elif path == "/api/clear-cache":
+            # Clear all cached scores and scraped items — forces fresh analysis on next search
+            try:
+                conn = get_connection()
+                cur  = conn.cursor()
+                p    = placeholder()
+                qs   = urllib.parse.parse_qs(self.path.split("?")[1]) if "?" in self.path else {}
+                query_param = qs.get("query", [""])[0].strip().lower()
+
+                if query_param:
+                    # Clear cache for a specific query only
+                    cur.execute(f"DELETE FROM demand_scores  WHERE LOWER(query)=LOWER({p})", (query_param,))
+                    cur.execute(f"DELETE FROM scraped_items  WHERE LOWER(query)=LOWER({p})", (query_param,))
+                    cur.execute(f"DELETE FROM trend_data     WHERE LOWER(query)=LOWER({p})", (query_param,))
+                    cur.execute(f"DELETE FROM company_financials WHERE LOWER(query)=LOWER({p})", (query_param,))
+                    cur.execute(f"DELETE FROM document_insights  WHERE LOWER(query)=LOWER({p})", (query_param,))
+                    conn.commit()
+                    conn.close()
+                    self._respond(200, {
+                        "status": "cleared",
+                        "query":  query_param,
+                        "message": f"Cache cleared for query: '{query_param}'"
+                    })
+                else:
+                    # Clear ALL cache
+                    cur.execute("DELETE FROM demand_scores")
+                    cur.execute("DELETE FROM scraped_items")
+                    cur.execute("DELETE FROM trend_data")
+                    cur.execute("DELETE FROM company_financials")
+                    cur.execute("DELETE FROM document_insights")
+                    conn.commit()
+                    conn.close()
+                    self._respond(200, {
+                        "status":  "cleared",
+                        "message": "Full cache cleared — all queries will be re-analysed on next search"
+                    })
+            except Exception as e:
+                self._respond(500, {"error": str(e)})
 
         else:
             self._respond(404, {"error": "not found"})
