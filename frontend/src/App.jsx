@@ -152,7 +152,6 @@ function EvidenceCard({ item }) {
       }}
     >
       <div style={{ display:"flex", gap: 12, alignItems:"flex-start" }}>
-        {/* Icon badge */}
         <div style={{
           minWidth: 30, height: 30, background: `${m.color}20`,
           border: `1px solid ${m.color}40`, color: m.color,
@@ -161,7 +160,6 @@ function EvidenceCard({ item }) {
         }}>{m.icon}</div>
 
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Source + signal */}
           <div style={{ display:"flex", gap: 8, alignItems:"center",
             flexWrap:"wrap", marginBottom: 4 }}>
             <span style={{ color: m.color, fontSize: 10, fontWeight: 700,
@@ -173,14 +171,12 @@ function EvidenceCard({ item }) {
             </span>
           </div>
 
-          {/* Title */}
           <p style={{ color: C.text, fontSize: 13, margin: 0,
             lineHeight: 1.5, fontWeight: 500 }}>
             {(item.title || "").slice(0, 120)}
             {(item.title || "").length > 120 ? "…" : ""}
           </p>
 
-          {/* Expanded content */}
           {open && (
             <div style={{ marginTop: 10 }}>
               {item.content && (
@@ -230,7 +226,6 @@ function PipelineTracker({ stageIndex, stages, scraper_results, message, cached 
         </div>
       )}
 
-      {/* Stage indicators */}
       <div style={{ display:"flex", flexWrap:"wrap", gap: 8 }}>
         {PIPELINE_STAGES.map((stage, i) => {
           const done = i < stageIndex || stageIndex === 7;
@@ -270,14 +265,10 @@ function PipelineTracker({ stageIndex, stages, scraper_results, message, cached 
   );
 }
 
-// ── Main App ──────────────────────────────────────────────────
-
 export default function App() {
   const [query, setQuery] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [showKey, setShowKey] = useState(false);
-
-  // States: idle | loading | running | complete | error
   const [appState, setAppState] = useState("idle");
   const [jobId, setJobId] = useState(null);
   const [pollStatus, setPollStatus] = useState(null);
@@ -289,7 +280,6 @@ export default function App() {
   const pollRef = useRef(null);
   const resultRef = useRef(null);
 
-  // ── Start search ──────────────────────────────────────────
   const handleSearch = async () => {
     if (!query.trim() || appState === "running") return;
 
@@ -326,7 +316,6 @@ export default function App() {
     }
   };
 
-  // ── Poll for status ───────────────────────────────────────
   useEffect(() => {
     if (appState !== "running" || !jobId) return;
 
@@ -345,13 +334,11 @@ export default function App() {
             return;
           }
 
-          // Fetch full result
           const rres = await fetch(`${API}/api/search/result/${encodeURIComponent(jobId)}`);
           const rdata = await rres.json();
           setResult(rdata.result);
           setAppState("complete");
 
-          // Scroll to results
           setTimeout(() => {
             resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
           }, 300);
@@ -364,7 +351,6 @@ export default function App() {
     return () => clearInterval(pollRef.current);
   }, [appState, jobId]);
 
-  // ── Derived ───────────────────────────────────────────────
   const evidence = result?.evidence || [];
   const itemTypes = [...new Set(evidence.map(i => i.item_type))];
   const filtered = evFilter === "all"
@@ -395,7 +381,6 @@ export default function App() {
         a { text-decoration:none; }
       `}</style>
 
-      {/* ── Top bar ── */}
       <div style={{
         background: C.surface, borderBottom: `1px solid ${C.border}`,
         padding: "0 40px", display:"flex", alignItems:"center",
@@ -411,7 +396,6 @@ export default function App() {
           </span>
         </div>
 
-        {/* Gemini key in header */}
         <div style={{ display:"flex", alignItems:"center", gap: 8 }}>
           <span style={{ color: C.muted, fontSize: 11 }}>Gemini API key:</span>
           <input
@@ -432,7 +416,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* ── Hero + Search ── */}
       <div style={{
         padding: isIdle ? "80px 24px 60px" : "40px 24px 32px",
         maxWidth: 760, margin:"0 auto",
@@ -464,7 +447,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Search box */}
         <div style={{
           background: C.surface,
           border: `1px solid ${isRunning ? C.amber+"60" : C.cyan+"40"}`,
@@ -506,7 +488,6 @@ export default function App() {
             </button>
           </div>
 
-          {/* Options row */}
           <div style={{ display:"flex", alignItems:"center", gap: 16,
             marginTop: 12, flexWrap:"wrap" }}>
             <label style={{ display:"flex", alignItems:"center", gap: 6,
@@ -522,7 +503,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Example chips */}
         {isIdle && (
           <div style={{ display:"flex", flexWrap:"wrap", gap: 8,
             marginTop: 16, animation:"fadeIn 0.6s ease 0.1s both" }}>
@@ -547,10 +527,8 @@ export default function App() {
         )}
       </div>
 
-      {/* ── Main content area ── */}
       <div style={{ maxWidth: 960, margin:"0 auto", padding:"0 24px 80px" }}>
 
-        {/* Error */}
         {appState === "error" && (
           <div style={{
             background:`${C.red}10`, border:`1px solid ${C.red}30`,
@@ -571,7 +549,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ── Pipeline status (while running) ── */}
         {isRunning && pollStatus && (
           <div style={{ animation:"fadeIn 0.3s ease" }}>
             <PipelineTracker
@@ -591,11 +568,9 @@ export default function App() {
           </div>
         )}
 
-        {/* ── Results ── */}
         {isComplete && result && (
           <div ref={resultRef} style={{ animation:"fadeIn 0.5s ease" }}>
 
-            {/* Pipeline completion summary */}
             <PipelineTracker
               stageIndex={7}
               stages={PIPELINE_STAGES}
@@ -604,7 +579,6 @@ export default function App() {
               cached={false}
             />
 
-            {/* ── DEMAND VERDICT ── */}
             <div style={{
               background: C.card,
               border: `1px solid ${vcfg.color}40`,
@@ -614,7 +588,6 @@ export default function App() {
               <div style={{ display:"grid", gridTemplateColumns:"auto 1fr",
                 gap: 28, alignItems:"start" }}>
 
-                {/* Score ring + domain */}
                 <div style={{ textAlign:"center" }}>
                   <Ring value={demandScore?.overall || 0} color={vcfg.color} size={110} />
                   <div style={{
@@ -630,7 +603,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Signal bars */}
                 <div>
                   <div style={{ color: C.muted, fontSize: 11, fontWeight: 600,
                     textTransform:"uppercase", letterSpacing:"0.07em",
@@ -643,11 +615,9 @@ export default function App() {
               </div>
             </div>
 
-            {/* ── WHY / WHY NOT ── */}
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr",
               gap: 16, marginBottom: 24 }}>
 
-              {/* Why demand */}
               <div style={{
                 background:`${C.green}06`,
                 border:`1px solid ${C.green}25`,
@@ -670,7 +640,6 @@ export default function App() {
                 </p>
               </div>
 
-              {/* Why NOT */}
               <div style={{
                 background:`${C.red}06`,
                 border:`1px solid ${C.red}25`,
@@ -694,7 +663,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* ── KEY EVIDENCE ── */}
             {demandScore?.key_evidence?.length > 0 && (
               <div style={{
                 background: C.card, border:`1px solid ${C.border}`,
@@ -720,7 +688,6 @@ export default function App() {
               </div>
             )}
 
-            {/* ── DOMAIN BREAKDOWN ── */}
             {result.domains && Object.keys(result.domains).length > 0 && (
               <div style={{
                 background: C.card, border:`1px solid ${C.border}`,
@@ -760,10 +727,8 @@ export default function App() {
               </div>
             )}
 
-            {/* ── EVIDENCE ITEMS ── */}
             {evidence.length > 0 && (
               <div>
-                {/* Header + filters */}
                 <div style={{ display:"flex", alignItems:"center",
                   justifyContent:"space-between", marginBottom: 16,
                   flexWrap:"wrap", gap: 12 }}>
@@ -776,7 +741,6 @@ export default function App() {
                     </span>
                   </div>
 
-                  {/* Filter chips */}
                   <div style={{ display:"flex", gap: 6, flexWrap:"wrap" }}>
                     <button onClick={() => setEvFilter("all")} style={{
                       background: evFilter === "all" ? `${C.cyan}20` : C.surface,
@@ -804,7 +768,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Cards */}
                 <div style={{ maxHeight: 700, overflowY:"auto", paddingRight: 4 }}>
                   {filtered.length === 0 ? (
                     <div style={{ color: C.muted, fontSize: 13,
@@ -818,7 +781,6 @@ export default function App() {
               </div>
             )}
 
-            {/* Refresh */}
             <div style={{ marginTop: 28, display:"flex", alignItems:"center",
               justifyContent:"space-between", flexWrap:"wrap", gap: 12 }}>
               <span style={{ color: C.muted, fontSize: 11 }}>
