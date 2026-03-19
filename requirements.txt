@@ -4,4 +4,3 @@ pytrends>=4.9.2
 playwright>=1.40.0
 pypdf>=3.17.0
 lxml>=4.9.0
-greenlet==3.0.3
